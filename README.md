@@ -1,135 +1,247 @@
-# Turborepo starter
+# 🎨 Excalidraw Clone – Full Stack Collaborative Drawing App
 
-This Turborepo starter is maintained by the Turborepo core team.
+A production-ready, real-time collaborative drawing application inspired by Excalidraw.
 
-## Using this example
+This project demonstrates end-to-end system design including frontend, backend APIs, WebSockets, database management, containerization, and cloud deployment.
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
-```
+## 🚀 Tech Stack
 
-## What's inside?
+### Frontend
 
-This Turborepo includes the following packages/apps:
+- Next.js
+- React + TypeScript
+- Tailwind CSS
+- Vercel
 
-### Apps and Packages
+### Backend
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- Node.js + Express
+- WebSocket (ws)
+- Prisma ORM
+- PostgreSQL
+- Render (Docker)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Tooling
 
-### Utilities
+- Turborepo
+- pnpm Workspaces
+- Docker
+- GitHub Actions
 
-This Turborepo has some additional tools already setup for you:
+---
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## 📂 Monorepo Structure
 
-### Build
+Excalidraw-Clone/
+├── apps/
+│ ├── web
+│ ├── http-backend
+│ └── ws-server
+├── packages/
+│ ├── db
+│ ├── backend-common
+│ ├── ui
+│ └── typescript-config
+├── turbo.json
+├── package.json
+└── pnpm-workspace.yaml
 
-To build all apps and packages, run the following command:
+---
 
-```
-cd my-turborepo
+## ✨ Features
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+- Real-time collaboration
+- Multi-user rooms
+- JWT authentication
+- Secure WebSockets
+- PostgreSQL persistence
+- Automatic migrations
+- Dockerized backend
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+---
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 🛠 Prerequisites
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+- Node.js >= 18
+- pnpm >= 8
+- Docker (optional)
+- PostgreSQL
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+---
 
-### Develop
+## ⚙️ Environment Variables
 
-To develop all apps and packages, run the following command:
+Create `.env` in root.
 
-```
-cd my-turborepo
+DATABASE_URL=postgresql://user:password@localhost:5432/excalidraw  
+JWT_SECRET=your_secret  
+NEXTAUTH_SECRET=your_secret
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+NEXT_PUBLIC_API_URL=http://localhost:3001  
+NEXT_PUBLIC_SOCKET_URL=ws://localhost:4000  
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+NODE_ENV=development
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Production envs are set in Render/Vercel.
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+---
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+## 📦 Installation
 
-### Remote Caching
+git clone https://github.com/your-username/excalidraw-clone.git  
+cd excalidraw-clone  
+pnpm install
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+---
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+## 🗄 Database Setup (Local)
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+Using Docker:
 
-```
-cd my-turborepo
+docker run -d \
+ --name excali-db \
+ -p 5432:5432 \
+ -e POSTGRES_USER=user \
+ -e POSTGRES_PASSWORD=password \
+ -e POSTGRES_DB=excalidraw \
+ postgres:15
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+Run migrations:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+pnpm db:migrate
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+---
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## ▶️ Running Locally
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+Start everything:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
+pnpm dev
 
-## Useful Links
+Services:
 
-Learn more about the power of Turborepo:
+Frontend: http://localhost:3000  
+Backend: http://localhost:3001  
+WebSocket: ws://localhost:4000
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+---
+
+## Individual Services
+
+pnpm dev:web  
+pnpm dev:api  
+pnpm dev:ws
+
+---
+
+## 🏗 Build
+
+pnpm build
+
+---
+
+## 🐳 Docker (Production)
+
+docker build -f apps/http-backend/Dockerfile -t excali-backend .
+
+Used for Render deployment.
+
+---
+
+## ☁️ Deployment
+
+### Backend & WS (Render)
+
+- Create Web Service
+- Select Docker
+- Add env variables
+- Enable auto deploy
+
+### Frontend (Vercel)
+
+- Import GitHub repo
+- Select apps/web
+- Add env variables
+- Deploy
+
+---
+
+## 🔄 Database Migrations
+
+Migrations run on startup:
+
+pnpm db:migrate
+
+---
+
+## 🔌 WebSocket Usage
+
+Example:
+
+const ws = new WebSocket(
+"wss://your-ws.onrender.com?token=JWT_TOKEN"
+);
+
+---
+
+## 🧪 Testing
+
+Manual testing  
+Future: Jest, Playwright
+
+---
+
+## 🚦 CI/CD
+
+- GitHub auto deploy
+- Render & Vercel pipelines
+- Prisma migrations on startup
+
+---
+
+## 📈 Performance
+
+- Stateless services
+- Connection pooling
+- CDN via Vercel
+
+---
+
+## 🔐 Security
+
+- JWT authentication
+- Secure env vars
+- CORS
+- WSS
+
+---
+
+## 📝 Resume Summary
+
+Built and deployed a real-time collaborative drawing platform using Next.js, Node.js, WebSockets, Prisma, PostgreSQL, Docker, Render, and Vercel in a Turborepo monorepo.
+
+---
+
+## 📌 Future Improvements
+
+- Redis pub/sub
+- RBAC
+- Offline sync
+- Versioning
+- Mobile support
+
+---
+
+## 👨‍💻 Author
+
+Rohit Kumar
+
+---
+
+## ⭐ Acknowledgements
+
+Inspired by Excalidraw  
+Built for learning and production experimentation
