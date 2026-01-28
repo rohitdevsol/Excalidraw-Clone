@@ -369,9 +369,7 @@ This project is licensed under the MIT License.
 
 **Rohit Kumar**
 
-- GitHub: [@your-username](https://github.com/your-username)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/your-profile)
-- Email: your.email@example.com
+- GitHub: [@rohitdev_sol](https://github.com/rohitdev_sol)
 
 ---
 
