@@ -8,7 +8,6 @@ export function useWebSocket(onMessage: (data: any) => void) {
   const { user } = useContext(Context);
   const onMessageRef = useRef(onMessage);
 
-  // Update the message handler without reconnecting
   useEffect(() => {
     onMessageRef.current = onMessage;
   }, [onMessage]);
@@ -18,36 +17,35 @@ export function useWebSocket(onMessage: (data: any) => void) {
       return;
     }
 
-    // Prevent duplicate connections during HMR
     if (
       ws.current?.readyState === WebSocket.OPEN ||
       ws.current?.readyState === WebSocket.CONNECTING
     ) {
-      console.log("⚠️ WebSocket already exists, skipping duplicate connection");
+      console.log(" WebSocket already exists, skipping duplicate connection");
       return;
     }
 
     const wsUrl = process.env.NEXT_PUBLIC_SOCKET_URL || "ws://localhost:8080";
     const fullUrl = `${wsUrl}?token=${user.token}`;
 
-    console.log("🔌 Creating new WebSocket connection");
+    console.log(" Creating new WebSocket connection", fullUrl);
     const socket = new WebSocket(fullUrl);
     ws.current = socket;
 
     socket.onopen = () => {
-      console.log("✅ WebSocket connected");
+      console.log(" WebSocket connected");
       setIsConnected(true);
     };
 
     socket.onclose = (event) => {
-      console.log("❌ WebSocket disconnected:", event.code, event.reason);
+      console.log(" WebSocket disconnected:", event.code, event.reason);
       setIsConnected(false);
     };
 
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        console.log("📨 Received message:", data);
+        console.log(" Received message:", data);
         onMessageRef.current(data); // Use ref instead of callback
       } catch (error) {
         console.log("Failed to parse message:", error);
@@ -59,7 +57,7 @@ export function useWebSocket(onMessage: (data: any) => void) {
     };
 
     return () => {
-      console.log("🧹 Cleaning up WebSocket");
+      console.log(" Cleaning up WebSocket");
       if (
         socket.readyState === WebSocket.OPEN ||
         socket.readyState === WebSocket.CONNECTING
@@ -71,10 +69,10 @@ export function useWebSocket(onMessage: (data: any) => void) {
 
   const send = useCallback((data: any) => {
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      console.log("📤 Sending message:", data);
+      console.log(" Sending message:", data);
       ws.current.send(JSON.stringify(data));
     } else {
-      console.warn("⏳ WebSocket not ready, queueing message:", data);
+      console.warn("WebSocket not ready, queueing message:", data);
     }
   }, []);
 
