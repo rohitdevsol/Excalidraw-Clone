@@ -8,6 +8,7 @@ RUN corepack enable
 RUN pnpm install --frozen-lockfile
 
 RUN pnpm build:api
+RUN pnpm db:migrate
 
 WORKDIR /app/apps/http-backend
 

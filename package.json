@@ -13,7 +13,7 @@
     "build:api": "pnpm --filter http-backend build",
     "build:ws": "pnpm --filter ws-server build",
     "db:generate": "pnpm --filter db run generate",
-    "db:migrate": "pnpm --filter db run migrate",
+    "db:migrate": "pnpm --filter db prisma migrate deploy",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
