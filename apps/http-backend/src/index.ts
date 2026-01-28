@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config({ path: "../../.env" });
 
 import cron from "node-cron";
-import axios from "axios";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common/config";
 import { authMiddleware, RequestWithUserId } from "./middleware";
@@ -23,7 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://collab-draw-alpha.vercel.app",
+    origin: "https://collabdraw.showcase.wiki",
     credentials: true,
   }),
 );
