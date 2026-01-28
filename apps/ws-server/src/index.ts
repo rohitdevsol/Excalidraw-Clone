@@ -1,41 +1,44 @@
 import { WebSocketServer } from "ws";
+import dotenv from "dotenv";
+dotenv.config({ path: "../../.env" });
 import { verifyToken } from "./utils/auth";
 import { addUser, removeUser } from "./state";
 import { handleEvent } from "./events/handlers";
 
-const wss = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ port: 4000 });
 
 wss.on("connection", (ws, req) => {
-    const url = req.url;
-    if (!url) return ws.close(4001, "Missing URL");
+  const url = req.url;
+  if (!url) return ws.close(4001, "Missing URL");
 
-    const params = new URLSearchParams(url.split("?")[1]);
-    const token = params.get("token") || "";
+  const params = new URLSearchParams(url.split("?")[1]);
+  const token = params.get("token") || "";
 
-    const payload = verifyToken(token);
-    if (!payload) return ws.close(4002, "Unauthorized");
+  const payload = verifyToken(token);
+  if (!payload) return ws.close(4002, "Unauthorized");
 
-    const user = { userId: payload.userId, name: payload.name ?? "John", ws };
-    addUser(user);
+  const user = { userId: payload.userId, name: payload.name ?? "John", ws };
+  addUser(user);
 
+  ws.on("message", (raw) => {
+    try {
+      const data = JSON.parse(raw.toString());
+      console.log(data);
+      //push roomId to rooms
 
-    ws.on("message", (raw) => {
-        try {
-            const data = JSON.parse(raw.toString());
-            console.log(data)
-            //push roomId to rooms
+      handleEvent(user, data);
+    } catch {
+      ws.send(
+        JSON.stringify({ type: "error", message: "Invalid message format" }),
+      );
+    }
+  });
 
-            handleEvent(user, data);
-        } catch {
-            ws.send(JSON.stringify({ type: "error", message: "Invalid message format" }));
-        }
-    });
+  ws.on("close", () => removeUser(user.userId));
 
-    ws.on("close", () => removeUser(user.userId));
-
-    ws.on("error", (error) => {
-        console.error(`WebSocket error for user ${user.name}:`, error);
-    });
+  ws.on("error", (error) => {
+    console.error(`WebSocket error for user ${user.name}:`, error);
+  });
 });
 
-console.log("WS server running on ws://localhost:8080");
+console.log("WS server running on ws://localhost:4000");
